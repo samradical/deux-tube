@@ -20,7 +20,7 @@
     "glslify": "^5.1.0"
   },
   "scripts": {
-    "start": "budo index.js:bundle.js  --host 0.0.0.0 --live | garnish -t [babelify --stage 1 ]",
+    "start": "budo index.js:bundle.js  --host 0.0.0.0 --live | garnish -t [babelify --stage 1 ] -t glslify",
     "build": "browserify index.js > bundle.js"
   },
   "private": true,

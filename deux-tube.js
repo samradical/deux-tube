@@ -1,8 +1,8 @@
-//import GUI from './vj/utils/GUI';
+import GUI from './GUI';
 //import { Emitter } from './vj/utils';
-import { Player, Controller } from '@samelie/dash-player'
-import VideoEffects from '@samelie/video-effects'
 
+import Video from './deux-player';
+import VideoEffects from '@samelie/video-effects'
 import {
   PLAYLIST_NEW_WAYS,
   PLAYLIST_OLD_WAYS,
@@ -25,32 +25,98 @@ import {
 const DeuxTube = () => {
 
   var appEl = document.getElementById('app')
-  var vjPlayer, videoCanvases, vj, midi, recorder
+  var vjPlayer1, vjPlayer2
 
   function init(audioData) {
-    let controller = new Controller()
-    controller.el = appEl
-    let mediaSource = controller.newSource()
-    mediaSource.noAutoStart = false
-    mediaSource.videoWidth = 640
-    mediaSource.videoHeight = 460
-    mediaSource.verbose = true
-    mediaSource.noVideoCanvas = true
-    mediaSource.video = true
-    mediaSource.elAttributes.muted = true
-    mediaSource.jsonUrls = [
-      'assets/amenothepdf52eed0-500d-11e6-aaf1-4d4553b6d1a3.json',
-      'assets/everythingonee973dbe0-500d-11e6-aaf1-4d4553b6d1a3.json'
-    ]
 
-    vjPlayer = new Player(controller)
-    let players = vjPlayer.controllers
+    /*vjPlayer1 = new Video(appEl, {
+       noAutoStart: false,
+       videoWidth: 640,
+       videoHeight: 460,
+       verbose: false,
+       noVideoCanvas: false,
+       elAttributes: {
+         muted: true
+       },
+       video: true,
+       jsonUrls: [
+         'assets/amenothepdf52eed0-500d-11e6-aaf1-4d4553b6d1a3.json',
+         'assets/everythingonee973dbe0-500d-11e6-aaf1-4d4553b6d1a3.json'
+       ]
+     })*/
+
+    vjPlayer2 = new Video(appEl, {
+      noAutoStart: false,
+      videoWidth: 640,
+      videoHeight: 460,
+      verbose: false,
+      noVideoCanvas: false,
+      elAttributes: {
+        muted: true
+      },
+      video: true,
+      /*jsonUrls: [
+          'assets/everythingonee973dbe0-500d-11e6-aaf1-4d4553b6d1a3.json',
+          'assets/amenothepdf52eed0-500d-11e6-aaf1-4d4553b6d1a3.json'
+        ]*/
+        playlists: [
+          'PLBm5UHsvUTFrU0IILE_eeYk3kV73KDHsp'
+        ]
+    })
+
+    let videoEffects = new VideoEffects(
+      document.getElementById('gl'),
+      document.getElementById('c'),
+      vjPlayer2.vjPlayer.mediaSources[0][0].el,
+      document.getElementById('v'), { width: 640, height: 360, fullscreen: true }
+    )
+
+    let _o = {
+      texture: {
+        type: 'uniform1i',
+        value: 0
+      },
+      texture2: {
+        type: 'uniform1i',
+        value: 1
+      },
+      uMixRatio: {
+        type: 'float',
+        value: 0.
+      },
+      uBrightness: {
+        type: 'float',
+        value: 0.
+      },
+      uContrast: {
+        type: 'float',
+        value: 0.
+      },
+      uKeyVideoIndex: {
+        type: 'int',
+        value: 0
+      }
+    }
+    let _uniforms = videoEffects.setUniforms(_o)
+
+    let gui = new GUI({
+      uMixRatio: _o.uMixRatio.value,
+      uKeyVideoIndex:false
+    })
+    gui.addNumber('uMixRatio', 0., 1.01, (changedValue) => {
+      _uniforms.uMixRatio = changedValue
+    })
+    gui.addBool('uKeyVideoIndex', (changedValue) => {
+      _uniforms.uKeyVideoIndex = (changedValue) ? 1 : 0
+    })
+
+    /*let players = vjPlayer.controllers
     console.log(players);
 
-    setTimeout(()=>{
+    setTimeout(() => {
       players[0]._nextVideo()
-    },5000)
-
+    }, 5000)
+*/
     window.addEventListener('resize', () => {});
 
     update()
