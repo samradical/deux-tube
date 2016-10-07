@@ -7,6 +7,14 @@ export default class G {
     this._uniforms = _uniforms
   }
 
+  addFolder(str){
+    return GUI.addFolder(str)
+  }
+
+  add(str){
+    GUI.add(this._uniforms, str)
+  }
+
   addNumber(str, min, max, callback) {
     GUI.add(this._uniforms, str, min, max).onChange(callback)
   }

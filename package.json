@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "animation-frame": "^0.3.0",
     "dat-gui": "^0.5.0",
     "lodash": "^4.12.0",
     "signals": "^1.0.0",
